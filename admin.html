@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container">
+    <h2>📋 Admin Panel</h2>
+    <div style="margin-bottom: 20px;">
+      <button onclick="window.location='index.html'">🏠 Back to Home</button>
+      <button onclick="logout()" style="margin-left: 10px;">🚪 Logout</button>
+    </div>
+    
+    <div id="book-list"></div>
+    
+    <h3>➕ Add New Book</h3>
+    <div class="form-group">
+      <input id="title" placeholder="📖 Book Title">
+      <input id="author" placeholder="✍️ Author Name">
+      <input id="quantity" type="number" placeholder="📊 Quantity">
+      <button onclick="addBook()">📚 Add Book</button>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+  <script>
+    // Check if user is authenticated as admin
+    if (sessionStorage.getItem('userType') !== 'admin') {
+      alert('Access denied! Please login as admin.');
+      window.location.href = 'index.html';
+    } else {
+      fetchBooks();
+    }
+    
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
