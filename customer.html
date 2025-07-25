@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head><title>Customer Portal</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="container">
+  <h2>👤 Customer Portal</h2>
+  <div style="margin-bottom: 20px;">
+    <span id="welcomeMsg"></span>
+    <button onclick="window.location='index.html'" style="margin-left: 10px;">🏠 Home</button>
+    <button onclick="logout()" style="margin-left: 10px;">🚪 Logout</button>
+  </div>
+  
+  <h3>📚 Available Books</h3>
+  <div id="book-list"></div>
+  
+  <h3>📜 Your Borrowed Books</h3>
+  <div id="borrowed-list"></div>
+</div>
+<script src="script.js"></script>
+<script>
+// Check if user is authenticated
+if (sessionStorage.getItem('userType') !== 'user') {
+  alert('Access denied! Please login as user.');
+  window.location.href = 'index.html';
+} else {
+  const userId = sessionStorage.getItem('userId');
+  const username = sessionStorage.getItem('username');
+  
+  document.getElementById('welcomeMsg').textContent = `Welcome, ${username}!`;
+  
+  fetchBooks(false);
+  fetchBorrowed(userId);
+}
+
+function logout() {
+  sessionStorage.clear();
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>
