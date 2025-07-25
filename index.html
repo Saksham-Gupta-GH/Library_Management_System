@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library System</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Library System</h1>
+    
+    <!-- Admin Login -->
+    <div class="login-section">
+      <h3>👨‍💼 Admin Login</h3>
+      <div class="form-group">
+        <input type="text" id="adminUsername" placeholder="Username" value="admin">
+        <input type="password" id="adminPassword" placeholder="Password" value="123">
+        <button onclick="adminLogin()">Login as Admin</button>
+      </div>
+    </div>
+    
+    <!-- User Login/Signup -->
+    <div class="login-section">
+      <h3>👤 User Portal</h3>
+      <div class="form-group">
+        <input type="text" id="userUsername" placeholder="Username">
+        <input type="password" id="userPassword" placeholder="Password">
+        <button onclick="userLogin()">Login</button>
+        <button onclick="userSignup()">Sign Up</button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function adminLogin() {
+      const username = document.getElementById('adminUsername').value;
+      const password = document.getElementById('adminPassword').value;
+      
+      if (username === 'admin' && password === '123') {
+        sessionStorage.setItem('userType', 'admin');
+        window.location.href = 'admin.html';
+      } else {
+        alert('Invalid admin credentials!');
+      }
+    }
+    
+    function userLogin() {
+      const username = document.getElementById('userUsername').value;
+      const password = document.getElementById('userPassword').value;
+      
+      if (!username || !password) {
+        alert('Please enter username and password');
+        return;
+      }
+      
+      fetch('http://localhost:3000/user/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          sessionStorage.setItem('userType', 'user');
+          sessionStorage.setItem('userId', data.userId);
+          sessionStorage.setItem('username', username);
+          window.location.href = 'customer.html';
+        } else {
+          alert('Invalid credentials!');
+        }
+      })
+      .catch(err => alert('Login failed!'));
+    }
+    
+    function userSignup() {
+      const username = document.getElementById('userUsername').value;
+      const password = document.getElementById('userPassword').value;
+      
+      if (!username || !password) {
+        alert('Please enter username and password');
+        return;
+      }
+      
+      fetch('http://localhost:3000/user/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Account created successfully! Please login.');
+        } else {
+          alert(data.message || 'Signup failed!');
+        }
+      })
+      .catch(err => alert('Signup failed!'));
+    }
+  </script>
+</body>
+</html>
