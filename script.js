@@ -1,4 +1,4 @@
-const API = "http://localhost:3000";
+const API = ""; // Changed from "http://localhost:3000" to empty string for relative URLs
 
 function fetchBooks(forAdmin = true) {
   fetch(`${API}/books`)
