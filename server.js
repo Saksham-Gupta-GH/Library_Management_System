@@ -1,15 +1,16 @@
-// server.js
 require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ObjectId } = require("mongodb");
-
 const app = express();
 const port = process.env.PORT || 3000;
+
 app.use(cors());
 app.use(express.json());
+app.use(express.static('.')); // ADD THIS LINE
 
-const uri = process.env.MONGODB_URI;//VERY IMP: ADD YOUR MONGODB CONNECTION STRING HERE
+const uri = process.env.MONGODB_URI;
+// ... rest of your code
 const client = new MongoClient(uri);
 let db, books, users;
 
