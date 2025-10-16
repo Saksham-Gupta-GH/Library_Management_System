@@ -32,70 +32,76 @@
   </div>
   
   <script>
-    function adminLogin() {
-      const username = document.getElementById('adminUsername').value;
-      const password = document.getElementById('adminPassword').value;
-      
-      if (username === 'admin' && password === '123') {
-        sessionStorage.setItem('userType', 'admin');
-        window.location.href = 'admin.html';
+  function adminLogin() {
+    const username = document.getElementById('adminUsername').value;
+    const password = document.getElementById('adminPassword').value;
+    
+    if (username === 'admin' && password === '123') {
+      sessionStorage.setItem('userType', 'admin');
+      window.location.href = 'admin.html';
+    } else {
+      alert('Invalid admin credentials!');
+    }
+  }
+  
+  function userLogin() {
+    const username = document.getElementById('userUsername').value;
+    const password = document.getElementById('userPassword').value;
+    
+    if (!username || !password) {
+      alert('Please enter username and password');
+      return;
+    }
+    
+    fetch('/user/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        sessionStorage.setItem('userType', 'user');
+        sessionStorage.setItem('userId', data.userId);
+        sessionStorage.setItem('username', username);
+        window.location.href = 'customer.html';
       } else {
-        alert('Invalid admin credentials!');
+        alert('Invalid credentials!');
       }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Login failed! Please try again.');
+    });
+  }
+  
+  function userSignup() {
+    const username = document.getElementById('userUsername').value;
+    const password = document.getElementById('userPassword').value;
+    
+    if (!username || !password) {
+      alert('Please enter username and password');
+      return;
     }
     
-    function userLogin() {
-      const username = document.getElementById('userUsername').value;
-      const password = document.getElementById('userPassword').value;
-      
-      if (!username || !password) {
-        alert('Please enter username and password');
-        return;
+    fetch('/user/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert('Account created successfully! Please login.');
+      } else {
+        alert(data.message || 'Signup failed!');
       }
-      
-      fetch('http://localhost:3000/user/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          sessionStorage.setItem('userType', 'user');
-          sessionStorage.setItem('userId', data.userId);
-          sessionStorage.setItem('username', username);
-          window.location.href = 'customer.html';
-        } else {
-          alert('Invalid credentials!');
-        }
-      })
-      .catch(err => alert('Login failed!'));
-    }
-    
-    function userSignup() {
-      const username = document.getElementById('userUsername').value;
-      const password = document.getElementById('userPassword').value;
-      
-      if (!username || !password) {
-        alert('Please enter username and password');
-        return;
-      }
-      
-      fetch('http://localhost:3000/user/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert('Account created successfully! Please login.');
-        } else {
-          alert(data.message || 'Signup failed!');
-        }
-      })
-      .catch(err => alert('Signup failed!'));
-    }
-  </script>
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Signup failed! Please try again.');
+    });
+  }
+</script>
 </body>
 </html>
